@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+backend/test_connection.py
+backend/test_direct.py
+backend/check_url.py
+.vscode/
+*.log
