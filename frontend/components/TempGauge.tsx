@@ -1,7 +1,7 @@
 "use client";
 
-const SIZE = 240;
-const STROKE = 10;
+const SIZE = 260;
+const STROKE = 11;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 const CENTER = SIZE / 2;
@@ -28,16 +28,10 @@ export default function TempGauge({
   const ticks = Array.from({ length: 30 }, (_, i) => i);
 
   return (
-    <div className="relative shrink-0" style={{ width: SIZE, height: SIZE }}>
+    <div className="animate-scale-in relative shrink-0" style={{ width: SIZE, height: SIZE }}>
+      <div className="gauge-glow" style={{ width: SIZE * 0.75, height: SIZE * 0.75 }} />
       <svg width={SIZE} height={SIZE} className="-rotate-90">
-        <circle
-          cx={CENTER}
-          cy={CENTER}
-          r={RADIUS}
-          fill="none"
-          stroke="var(--panel-border)"
-          strokeWidth={STROKE}
-        />
+        <circle cx={CENTER} cy={CENTER} r={RADIUS} fill="none" stroke="var(--panel-border)" strokeWidth={STROKE} />
         <circle
           cx={CENTER}
           cy={CENTER}
@@ -48,7 +42,7 @@ export default function TempGauge({
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={offset}
-          style={{ transition: "stroke-dashoffset 0.7s ease" }}
+          style={{ transition: "stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1)" }}
         />
       </svg>
 
@@ -57,8 +51,8 @@ export default function TempGauge({
           const angle = (i / ticks.length) * 360 - 90;
           const rad = (angle * Math.PI) / 180;
           const major = i % 5 === 0;
-          const rOuter = RADIUS - STROKE / 2 - 6;
-          const rInner = rOuter - (major ? 9 : 5);
+          const rOuter = RADIUS - STROKE / 2 - 7;
+          const rInner = rOuter - (major ? 10 : 5);
           const x1 = CENTER + rOuter * Math.cos(rad);
           const y1 = CENTER + rOuter * Math.sin(rad);
           const x2 = CENTER + rInner * Math.cos(rad);
@@ -78,15 +72,12 @@ export default function TempGauge({
         })}
       </svg>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5">
-        <img src={iconUrl} alt={condition} className="h-9 w-9 opacity-90" />
-        <span className="font-mono-ui text-[42px] font-medium leading-none">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+        <img src={iconUrl} alt={condition} className="h-12 w-12 opacity-90" />
+        <span className="font-mono-ui text-[60px] font-medium leading-none tracking-tight">
           {Math.round(tempC)}°
         </span>
-        <span
-          className="font-mono-ui text-[10px] uppercase tracking-[0.2em]"
-          style={{ color: "var(--text-muted)" }}
-        >
+        <span className="font-mono-ui text-[13px] uppercase tracking-[0.2em]" style={{ color: "var(--text-muted)" }}>
           {condition}
         </span>
       </div>

@@ -1,32 +1,30 @@
 @import "tailwindcss";
 
-/* ── Keep whatever Tailwind import lines are already at the very top of
-   this file (either `@tailwind base/components/utilities;` for Tailwind v3,
-   or `@import "tailwindcss";` for v4) — then replace everything below
-   that with what follows. ── */
+/* ── GALAXY THEME — replace your ENTIRE globals.css with this file.
+   Same variable names as before, so no .tsx files need to change. ── */
 
 :root {
   /* atmosphere */
-  --bg: #0d1826;
-  --bg-deep: #08111c;
-  --panel: #142335;
-  --panel-border: #24384f;
+  --bg: #060a14;
+  --bg-deep: #020408;
+  --panel: #0e1626;
+  --panel-border: #1e2c44;
 
-  /* readout paper */
-  --paper: #ede7d9;
-  --paper-dim: #cfc9b8;
+  /* readout paper (kept for any component still referencing it) */
+  --paper: #eef2fa;
+  --paper-dim: #c7d0e0;
 
-  /* accents */
-  --brass: #c99a4b;
-  --brass-dim: #8a7040;
+  /* accents — same variable names, now galaxy blue instead of brass */
+  --brass: #5b8cff;
+  --brass-dim: #3a5db8;
   --ice: #7fb3d5;
-  --storm: #8b7fd1;
+  --storm: #9b8cff;
   --danger: #e0704f;
 
   /* text */
-  --text-primary: #ede7d9;
-  --text-muted: #7f8ea1;
-  --text-faint: #4d5c70;
+  --text-primary: #f4f7fc;
+  --text-muted: #9fb0cc;
+  --text-faint: #56658a;
 }
 
 * {
@@ -42,8 +40,19 @@ body {
 body {
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   background-image:
-    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(201, 154, 75, 0.08), transparent),
-    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(127, 179, 213, 0.06), transparent);
+    /* soft star field */
+    radial-gradient(1px 1px at 12% 22%, rgba(255, 255, 255, 0.55), transparent 50%),
+    radial-gradient(1px 1px at 28% 68%, rgba(255, 255, 255, 0.4), transparent 50%),
+    radial-gradient(1.5px 1.5px at 45% 15%, rgba(255, 255, 255, 0.5), transparent 50%),
+    radial-gradient(1px 1px at 62% 78%, rgba(255, 255, 255, 0.35), transparent 50%),
+    radial-gradient(1.5px 1.5px at 78% 35%, rgba(255, 255, 255, 0.5), transparent 50%),
+    radial-gradient(1px 1px at 88% 60%, rgba(255, 255, 255, 0.4), transparent 50%),
+    radial-gradient(1px 1px at 95% 12%, rgba(255, 255, 255, 0.35), transparent 50%),
+    radial-gradient(1px 1px at 8% 85%, rgba(255, 255, 255, 0.3), transparent 50%),
+    /* galaxy glow */
+    radial-gradient(ellipse 1000px 560px at 50% -8%, rgba(91, 140, 255, 0.22), transparent),
+    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(155, 140, 255, 0.12), transparent),
+    radial-gradient(ellipse 600px 400px at 0% 100%, rgba(91, 140, 255, 0.08), transparent);
   background-attachment: fixed;
 }
 
@@ -81,12 +90,8 @@ body {
 }
 
 
-/* ── Round 3: append this ENTIRE block to the end of your globals.css,
-   after the additions-2 block you already merged in. No new deps. ── */
+/* ── Round 3: stagger, shimmer, and micro-interactions ── */
 
-/* ── stagger: wrap a list/grid in .stagger-children, give each item
-   .animate-fade-up — children get an auto-incrementing delay via
-   nth-child so you don't have to compute delays in JS. ── */
 .stagger-children > * {
   animation-delay: calc(var(--stagger-base, 0ms) + (var(--stagger-i, 0) * 55ms));
 }
@@ -102,7 +107,6 @@ body {
 .stagger-children > *:nth-child(10) { --stagger-i: 10; }
 .stagger-children > *:nth-child(n + 11) { --stagger-i: 11; }
 
-/* ── row hover: reveal a trailing arrow / affordance without layout shift ── */
 .row-hover {
   position: relative;
   transition: background 0.2s ease, padding-left 0.2s ease;
@@ -122,20 +126,15 @@ body {
   transform: translateX(0);
 }
 
-/* ── skeleton / shimmer loading state ── */
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 .skeleton {
   background: linear-gradient(
     90deg,
     var(--panel) 0%,
-    rgba(201, 154, 75, 0.12) 50%,
+    rgba(91, 140, 255, 0.15) 50%,
     var(--panel) 100%
   );
   background-size: 200% 100%;
@@ -143,7 +142,6 @@ body {
   border-radius: 2px;
 }
 
-/* ── loading dots, drop into any button/label text: "Reading" + <span class="loading-dots"> ── */
 @keyframes dotBlink {
   0%, 80%, 100% { opacity: 0.15; }
   40% { opacity: 1; }
@@ -154,30 +152,17 @@ body {
 .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
 .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
 
-/* ── gauge entrance + glow ── */
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.88);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.88); }
+  to { opacity: 1; transform: scale(1); }
 }
 .animate-scale-in {
   animation: scaleIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes glowBreathe {
-  0%, 100% {
-    opacity: 0.25;
-    transform: translate(-50%, -50%) scale(0.96);
-  }
-  50% {
-    opacity: 0.5;
-    transform: translate(-50%, -50%) scale(1.04);
-  }
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.96); }
+  50% { opacity: 0.55; transform: translate(-50%, -50%) scale(1.04); }
 }
 .gauge-glow {
   position: absolute;
@@ -185,12 +170,11 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(201, 154, 75, 0.35) 0%, rgba(201, 154, 75, 0) 70%);
+  background: radial-gradient(circle, rgba(91, 140, 255, 0.4) 0%, rgba(91, 140, 255, 0) 70%);
   animation: glowBreathe 3.4s ease-in-out infinite;
   pointer-events: none;
 }
 
-/* ── nav active-link indicator ── */
 .nav-link {
   position: relative;
 }
@@ -211,7 +195,6 @@ body {
   transform: scaleX(1);
 }
 
-/* ── logo mark: subtle rotate on hover ── */
 .logo-mark {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
 }

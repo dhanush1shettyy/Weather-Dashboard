@@ -32,7 +32,7 @@ export default function HistoryPage() {
 
   if (!authLoading && !token) {
     return (
-      <p className="py-16 text-center font-mono-ui text-xs" style={{ color: "var(--text-faint)" }}>
+      <p className="py-20 text-center font-mono-ui text-sm" style={{ color: "var(--text-faint)" }}>
         <Link href="/login" className="underline" style={{ color: "var(--ice)" }}>
           Sign in
         </Link>{" "}
@@ -42,50 +42,68 @@ export default function HistoryPage() {
   }
 
   return (
-    <div>
-      <div className="mb-6 flex items-end justify-between">
+    <div className="animate-fade-up">
+      <div className="mb-8 flex items-end justify-between">
         <div>
-          <p className="font-mono-ui text-[10px] uppercase tracking-[0.25em]" style={{ color: "var(--text-faint)" }}>
+          <p className="font-mono-ui text-[11px] uppercase tracking-[0.3em]" style={{ color: "var(--brass)" }}>
             Log
           </p>
-          <h1 className="font-display mt-1 text-2xl font-semibold tracking-tight">Search history</h1>
+          <h1 className="font-display mt-2 text-4xl font-semibold tracking-tight">Search history</h1>
         </div>
         {history.length > 0 && (
           <button
             onClick={handleClear}
-            className="font-mono-ui text-[10px] uppercase tracking-wider transition"
+            className="font-mono-ui text-[11px] uppercase tracking-wider transition-colors hover:text-[var(--danger)]"
             style={{ color: "var(--text-faint)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--danger)")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-faint)")}
           >
             Clear log
           </button>
         )}
       </div>
 
-      {loading && <p className="font-mono-ui text-xs" style={{ color: "var(--text-faint)" }}>Loading…</p>}
-      {error && <p className="font-mono-ui text-xs" style={{ color: "var(--danger)" }}>! {error}</p>}
+      {loading && (
+        <div className="space-y-px overflow-hidden rounded-sm border" style={{ borderColor: "var(--panel-border)" }}>
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="skeleton h-[70px]" style={{ animationDelay: `${i * 90}ms` }} />
+          ))}
+        </div>
+      )}
+      {error && <p className="font-mono-ui text-sm" style={{ color: "var(--danger)" }}>! {error}</p>}
       {!loading && history.length === 0 && (
-        <p className="font-mono-ui text-xs" style={{ color: "var(--text-faint)" }}>No entries yet.</p>
+        <div
+          className="flex flex-col items-center gap-3 rounded-sm border border-dashed py-20 text-center"
+          style={{ borderColor: "var(--panel-border)" }}
+        >
+          <span className="font-mono-ui text-2xl" style={{ color: "var(--brass)" }}>
+            ⏱
+          </span>
+          <p className="font-mono-ui text-sm" style={{ color: "var(--text-faint)" }}>No entries yet.</p>
+        </div>
       )}
 
-      <ul className="divide-y overflow-hidden rounded-sm border" style={{ borderColor: "var(--panel-border)" }}>
-        {history.map((h) => (
-          <li
-            key={h.id}
-            className="flex items-center justify-between px-5 py-4"
-            style={{ background: "var(--panel)", borderColor: "var(--panel-border)" }}
-          >
-            <span className="text-sm">
-              {h.city_name}
-              {h.country_code ? `, ${h.country_code}` : ""}
-            </span>
-            <span className="font-mono-ui text-[10px]" style={{ color: "var(--text-faint)" }}>
-              {new Date(h.searched_at).toLocaleString()}
-            </span>
-          </li>
-        ))}
-      </ul>
+      {!loading && history.length > 0 && (
+        <ul
+          className="stagger-children divide-y overflow-hidden rounded-sm border"
+          style={{ borderColor: "var(--panel-border)" }}
+        >
+          {history.map((h) => (
+            <li
+              key={h.id}
+              className="row-hover animate-fade-up flex items-center justify-between px-6 py-5 hover:bg-[var(--bg-deep)]"
+              style={{ background: "var(--panel)", borderColor: "var(--panel-border)" }}
+            >
+              <span className="flex items-center gap-2 text-base">
+                <span className="row-affordance">→</span>
+                {h.city_name}
+                {h.country_code ? `, ${h.country_code}` : ""}
+              </span>
+              <span className="font-mono-ui text-[11px]" style={{ color: "var(--text-faint)" }}>
+                {new Date(h.searched_at).toLocaleString()}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
