@@ -77,7 +77,7 @@ export default function HistoryPage() {
           <span className="font-mono-ui text-2xl" style={{ color: "var(--brass)" }}>
             ⏱
           </span>
-          <p className="font-mono-ui text-sm" style={{ color: "var(--text-faint)" }}>No entries yet.</p>
+          <p className="font-mono-ui text-base" style={{ color: "var(--text-faint)" }}>No entries yet.</p>
         </div>
       )}
 
@@ -97,7 +97,7 @@ export default function HistoryPage() {
                 {h.city_name}
                 {h.country_code ? `, ${h.country_code}` : ""}
               </span>
-              <span className="font-mono-ui text-[11px]" style={{ color: "var(--text-faint)" }}>
+              <span className="font-mono-ui text-[12px]" style={{ color: "var(--text-faint)" }}>
                 {new Date(h.searched_at).toLocaleString()}
               </span>
             </li>

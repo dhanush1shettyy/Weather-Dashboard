@@ -77,40 +77,42 @@ export default function DashboardPage() {
   return (
     <div className="space-y-10">
       {/* search rail */}
-      <form onSubmit={handleSubmit} className="animate-fade-up flex flex-col gap-2 sm:flex-row">
+      <form onSubmit={handleSubmit} className="flex gap-2">
         <div
-          className="flex flex-1 items-center gap-2.5 rounded-sm border px-4 transition-colors focus-within:border-[var(--brass)]"
+          className="flex flex-1 items-center gap-2 rounded-sm border px-4"
           style={{ borderColor: "var(--panel-border)", background: "var(--panel)" }}
         >
-          <span className="font-mono-ui text-sm" style={{ color: "var(--text-faint)" }}>
+          <span className="font-mono-ui text-xs" style={{ color: "var(--text-faint)" }}>
             ⌖
           </span>
           <input
             value={city}
             onChange={(e) => setCity(e.target.value)}
             placeholder="Locate a station — e.g. Bengaluru"
-            className="w-full bg-transparent py-3.5 text-[15px] placeholder:text-[var(--text-faint)] focus:outline-none"
+            className="w-full bg-transparent py-3 text-sm placeholder:text-[var(--text-faint)] focus:outline-none"
           />
         </div>
-        <div className="flex gap-2">
-          <button type="submit" disabled={loading} className="btn btn-primary flex-1 disabled:opacity-40 sm:flex-none">
-            {loading ? (
-              <span className="loading-dots inline-flex items-center gap-0.5">
-                Reading<span>.</span><span>.</span><span>.</span>
-              </span>
-            ) : (
-              "Read"
-            )}
-          </button>
-          <button type="button" onClick={useMyLocation} className="btn btn-ghost flex-1 sm:flex-none">
-            ⟡ Here
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-sm border px-5 font-mono-ui text-xs uppercase tracking-wider transition disabled:opacity-40"
+          style={{ borderColor: "var(--brass)", color: "var(--brass)" }}
+        >
+          {loading ? "Reading…" : "Read"}
+        </button>
+        <button
+          type="button"
+          onClick={useMyLocation}
+          className="rounded-sm border px-4 font-mono-ui text-xs uppercase tracking-wider transition"
+          style={{ borderColor: "var(--panel-border)", color: "var(--text-muted)" }}
+        >
+          ⟡ Here
+        </button>
       </form>
 
       {error && (
         <p
-          className="animate-fade-up rounded-sm border px-4 py-3 font-mono-ui text-sm"
+          className="rounded-sm border px-4 py-3 font-mono-ui text-xs"
           style={{ borderColor: "var(--danger)", color: "var(--danger)", background: "rgba(224,112,79,0.08)" }}
         >
           ! {error}
@@ -119,22 +121,22 @@ export default function DashboardPage() {
 
       {current && (
         <section
-          className="card-hover animate-fade-up rounded-sm border p-6 sm:p-9"
+          className="rounded-sm border p-6 sm:p-8"
           style={{ borderColor: "var(--panel-border)", background: "var(--panel)" }}
         >
           <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-center sm:text-left">
               <p
-                className="font-mono-ui text-[11px] uppercase tracking-[0.25em]"
+                className="font-mono-ui text-[10px] uppercase tracking-[0.25em]"
                 style={{ color: "var(--text-faint)" }}
               >
                 Current reading
               </p>
-              <h1 className="font-display mt-1.5 text-4xl font-semibold tracking-tight sm:text-6xl">
+              <h1 className="font-display mt-1 text-3xl font-semibold tracking-tight">
                 {current.city}
                 {current.country ? `, ${current.country}` : ""}
               </h1>
-              <p className="mt-2.5 font-mono-ui text-[15px]" style={{ color: "var(--text-muted)" }}>
+              <p className="mt-1 font-mono-ui text-xs" style={{ color: "var(--text-muted)" }}>
                 {current.latitude.toFixed(2)}°, {current.longitude.toFixed(2)}° · feels{" "}
                 {Math.round(current.feels_like_c)}°
               </p>
@@ -147,20 +149,13 @@ export default function DashboardPage() {
             />
           </div>
 
-          <div
-            className="stagger-children mt-9 grid grid-cols-2 gap-px overflow-hidden rounded-sm border sm:grid-cols-4"
-            style={{ borderColor: "var(--panel-border)" }}
-          >
+          <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-sm border sm:grid-cols-4" style={{ borderColor: "var(--panel-border)" }}>
             <Readout label="Humidity" value={`${current.humidity}%`} />
             <Readout label="Wind" value={`${current.wind_speed_kmh}`} unit="km/h" />
             <Readout label="Pressure" value={`${current.pressure_hpa}`} unit="hPa" />
             <Readout
               label="UV index"
-              value={
-                current.uv_index !== undefined && current.uv_index !== null
-                  ? String(current.uv_index)
-                  : "—"
-              }
+              value={current.uv_index !== undefined && current.uv_index !== null ? String(current.uv_index) : "—"}
             />
           </div>
         </section>
@@ -168,45 +163,54 @@ export default function DashboardPage() {
 
       {forecast && chartData.length > 0 && (
         <section
-          className="card-hover animate-fade-up rounded-sm border p-6 sm:p-9"
+          className="rounded-sm border p-6 sm:p-8"
           style={{ borderColor: "var(--panel-border)", background: "var(--panel)" }}
         >
-          <div className="mb-6 flex items-baseline justify-between">
-            <h2
-              className="font-mono-ui text-[11px] uppercase tracking-[0.25em]"
-              style={{ color: "var(--text-faint)" }}
-            >
+          <div className="mb-5 flex items-baseline justify-between">
+            <h2 className="font-mono-ui text-[10px] uppercase tracking-[0.25em]" style={{ color: "var(--text-faint)" }}>
               24hr trace
             </h2>
-            <span className="font-mono-ui text-[11px]" style={{ color: "var(--text-faint)" }}>
+            <span className="font-mono-ui text-[10px]" style={{ color: "var(--text-faint)" }}>
               °C
             </span>
           </div>
-          <div className="h-56">
+          <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="2 6" stroke="var(--panel-border)" vertical={false} />
-                <XAxis dataKey="time" stroke="var(--text-faint)" fontSize={11} tickLine={false} axisLine={false} />
+                <XAxis
+                  dataKey="time"
+                  stroke="var(--text-faint)"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
                 <YAxis
                   stroke="var(--text-faint)"
-                  fontSize={11}
+                  fontSize={10}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(v) => `${v}°`}
-                  width={34}
+                  width={32}
                 />
                 <Tooltip
                   contentStyle={{
                     background: "var(--bg-deep)",
                     border: "1px solid var(--panel-border)",
                     borderRadius: 2,
-                    fontSize: 12,
+                    fontSize: 11,
                     fontFamily: "var(--font-mono)",
                   }}
                   labelStyle={{ color: "var(--text-muted)" }}
                   formatter={(value: number) => [`${value}°C`, ""]}
                 />
-                <Line type="monotone" dataKey="temp" stroke="var(--brass)" strokeWidth={2} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey="temp"
+                  stroke="var(--brass)"
+                  strokeWidth={1.75}
+                  dot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -215,34 +219,30 @@ export default function DashboardPage() {
 
       {forecast && forecast.daily.length > 0 && (
         <section
-          className="card-hover animate-fade-up rounded-sm border p-6 sm:p-9"
+          className="rounded-sm border p-6 sm:p-8"
           style={{ borderColor: "var(--panel-border)", background: "var(--panel)" }}
         >
-          <h2
-            className="mb-6 font-mono-ui text-[11px] uppercase tracking-[0.25em]"
-            style={{ color: "var(--text-faint)" }}
-          >
+          <h2 className="mb-5 font-mono-ui text-[10px] uppercase tracking-[0.25em]" style={{ color: "var(--text-faint)" }}>
             7-day manifest
           </h2>
-          <div className="stagger-children flex divide-x overflow-x-auto" style={{ borderColor: "var(--panel-border)" }}>
+          <div className="flex divide-x overflow-x-auto" style={{ borderColor: "var(--panel-border)" }}>
             {forecast.daily.map((d, i) => (
               <div
                 key={d.date}
-                className="animate-fade-up flex min-w-[100px] flex-1 flex-col items-center gap-2.5 px-3 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--bg-deep)]"
+                className="flex min-w-[92px] flex-1 flex-col items-center gap-2 px-3 py-2"
                 style={{ borderColor: "var(--panel-border)" }}
               >
-                <span
-                  className="font-mono-ui text-[13px] uppercase tracking-wider"
-                  style={{ color: "var(--text-faint)" }}
-                >
-                  {i === 0 ? "Today" : new Date(d.date).toLocaleDateString([], { weekday: "short" })}
+                <span className="font-mono-ui text-[10px] uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>
+                  {i === 0
+                    ? "Today"
+                    : new Date(d.date).toLocaleDateString([], { weekday: "short" })}
                 </span>
                 <img
                   src={`https://openweathermap.org/img/wn/${d.icon}.png`}
                   alt={d.condition}
-                  className="h-9 w-9 opacity-90"
+                  className="h-8 w-8 opacity-90"
                 />
-                <span className="font-mono-ui text-[17px]">
+                <span className="font-mono-ui text-sm">
                   <span style={{ color: "var(--text-primary)" }}>{Math.round(d.max_temp_c)}°</span>{" "}
                   <span style={{ color: "var(--text-faint)" }}>{Math.round(d.min_temp_c)}°</span>
                 </span>
@@ -254,13 +254,13 @@ export default function DashboardPage() {
 
       {!current && !loading && (
         <div
-          className="animate-fade-up flex flex-col items-center gap-3 rounded-sm border border-dashed py-24 text-center"
+          className="flex flex-col items-center gap-3 rounded-sm border border-dashed py-20 text-center"
           style={{ borderColor: "var(--panel-border)" }}
         >
-          <span className="font-mono-ui text-3xl" style={{ color: "var(--brass)" }}>
+          <span className="font-mono-ui text-2xl" style={{ color: "var(--brass)" }}>
             ⟡
           </span>
-          <p className="font-mono-ui text-base" style={{ color: "var(--text-faint)" }}>
+          <p className="font-mono-ui text-xs" style={{ color: "var(--text-faint)" }}>
             No station selected — search a city or read your location.
           </p>
         </div>
@@ -271,17 +271,14 @@ export default function DashboardPage() {
 
 function Readout({ label, value, unit }: { label: string; value: string; unit?: string }) {
   return (
-    <div
-      className="animate-fade-up px-4 py-5 transition-colors hover:bg-[#0f1c2c]"
-      style={{ background: "var(--bg-deep)" }}
-    >
-      <p className="font-mono-ui text-[11px] uppercase tracking-[0.2em]" style={{ color: "var(--text-faint)" }}>
+    <div className="px-4 py-4" style={{ background: "var(--bg-deep)" }}>
+      <p className="font-mono-ui text-[9px] uppercase tracking-[0.2em]" style={{ color: "var(--text-faint)" }}>
         {label}
       </p>
-      <p className="mt-2 font-mono-ui text-2xl">
+      <p className="mt-1.5 font-mono-ui text-lg">
         {value}
         {unit && (
-          <span className="ml-1 text-base" style={{ color: "var(--text-muted)" }}>
+          <span className="ml-1 text-xs" style={{ color: "var(--text-muted)" }}>
             {unit}
           </span>
         )}

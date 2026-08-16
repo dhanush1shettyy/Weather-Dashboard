@@ -64,7 +64,7 @@ export default function FavoritesPage() {
           <span className="font-mono-ui text-2xl" style={{ color: "var(--brass)" }}>
             ⟡
           </span>
-          <p className="font-mono-ui text-sm" style={{ color: "var(--text-faint)" }}>No stations saved yet.</p>
+          <p className="font-mono-ui text-base" style={{ color: "var(--text-faint)" }}>No stations saved yet.</p>
         </div>
       )}
 
