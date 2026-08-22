@@ -1,0 +1,62 @@
+/* ── Button system — append this to the end of your globals.css.
+   These classes are used throughout NavBar, landing page, login/signup,
+   dashboard, etc. but were never actually defined until now. ── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  cursor: default;
+  opacity: 0.45;
+  transform: none;
+}
+
+/* solid, high-emphasis — main CTAs */
+.btn-primary {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: var(--bg-deep);
+}
+.btn-primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--brass) 85%, white);
+  border-color: color-mix(in srgb, var(--brass) 85%, white);
+}
+
+/* outlined — secondary emphasis */
+.btn-outline {
+  background: transparent;
+  border-color: var(--brass);
+  color: var(--brass);
+}
+.btn-outline:hover:not(:disabled) {
+  background: rgba(91, 140, 255, 0.1);
+}
+
+/* ghost — low emphasis, nav/utility actions */
+.btn-ghost {
+  background: transparent;
+  border-color: var(--panel-border);
+  color: var(--text-muted);
+}
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--brass);
+  color: var(--brass);
+}
