@@ -1,0 +1,100 @@
+/* ── Nebula FX — append this to the end of your globals.css.
+   Ambient drifting nebula blobs + a cursor-following glow, site-wide. ── */
+
+.nebula-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nebula-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.28;
+  will-change: transform;
+}
+
+.nebula-blob-1 {
+  top: -10%;
+  left: -5%;
+  width: 620px;
+  height: 620px;
+  background: radial-gradient(circle, rgba(91, 140, 255, 0.9), transparent 70%);
+  animation: driftA 42s ease-in-out infinite;
+}
+
+.nebula-blob-2 {
+  top: 30%;
+  right: -10%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(155, 140, 255, 0.85), transparent 70%);
+  animation: driftB 55s ease-in-out infinite;
+}
+
+.nebula-blob-3 {
+  bottom: -15%;
+  left: 25%;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(91, 140, 255, 0.7), transparent 70%);
+  animation: driftC 48s ease-in-out infinite;
+}
+
+@keyframes driftA {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 80px) scale(1.12); }
+}
+@keyframes driftB {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-70px, 50px) scale(1.08); }
+}
+@keyframes driftC {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -60px) scale(1.15); }
+}
+
+.nebula-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 420px;
+  height: 420px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(91, 140, 255, 0.35) 0%,
+    rgba(155, 140, 255, 0.22) 35%,
+    rgba(91, 140, 255, 0) 70%
+  );
+  filter: blur(20px);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* keep all real page content above the nebula layer */
+main,
+header {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebula-blob {
+    animation: none !important;
+  }
+  .nebula-cursor {
+    display: none;
+  }
+}
+
+@media (hover: none) {
+  /* touch devices — no cursor to follow, hide the glow */
+  .nebula-cursor {
+    display: none;
+  }
+}
