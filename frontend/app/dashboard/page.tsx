@@ -12,22 +12,29 @@ import {
 } from "recharts";
 import * as api from "@/lib/api";
 import { useAuth } from "@/lib/AuthContext";
+import { useUnit, celsiusToDisplay } from "@/lib/UnitContext";
+import { useWeatherFX } from "@/lib/WeatherFXContext";
 import TempGauge from "@/components/TempGauge";
 
 export default function DashboardPage() {
   const { token } = useAuth();
+  const { unit } = useUnit();
+  const { setMoodFromCondition } = useWeatherFX();
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [current, setCurrent] = useState<api.CurrentWeather | null>(null);
   const [forecast, setForecast] = useState<api.ForecastResponse | null>(null);
+  const [favoriteState, setFavoriteState] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   async function runSearch(params: { city?: string; lat?: number; lon?: number }) {
     setLoading(true);
     setError(null);
+    setFavoriteState("idle");
     try {
       const weather = await api.getCurrentWeather(params);
       setCurrent(weather);
+      setMoodFromCondition(weather.condition);
 
       const fc = await api.getForecast(weather.latitude, weather.longitude);
       setForecast(fc);
@@ -68,10 +75,26 @@ export default function DashboardPage() {
     );
   }
 
+  async function saveFavorite() {
+    if (!token || !current || favoriteState === "saving" || favoriteState === "saved") return;
+    setFavoriteState("saving");
+    try {
+      await api.addFavorite(token, {
+        city_name: current.city,
+        country_code: current.country,
+        latitude: current.latitude,
+        longitude: current.longitude,
+      });
+      setFavoriteState("saved");
+    } catch {
+      setFavoriteState("error");
+    }
+  }
+
   const chartData =
     forecast?.hourly.map((h) => ({
       time: new Date(h.time).toLocaleTimeString([], { hour: "numeric" }),
-      temp: h.temperature_c,
+      temp: celsiusToDisplay(h.temperature_c, unit),
     })) ?? [];
 
   return (
@@ -124,19 +147,37 @@ export default function DashboardPage() {
         >
           <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-center sm:text-left">
-              <p
-                className="font-mono-ui text-[11px] uppercase tracking-[0.25em]"
-                style={{ color: "var(--text-faint)" }}
-              >
-                Current reading
-              </p>
+              <div className="flex items-center justify-center gap-3 sm:justify-start">
+                <p
+                  className="font-mono-ui text-[11px] uppercase tracking-[0.25em]"
+                  style={{ color: "var(--text-faint)" }}
+                >
+                  Current reading
+                </p>
+                {token && (
+                  <button
+                    type="button"
+                    onClick={saveFavorite}
+                    disabled={favoriteState === "saving" || favoriteState === "saved"}
+                    className="font-mono-ui text-[11px] uppercase tracking-wider transition-colors disabled:cursor-default"
+                    style={{
+                      color: favoriteState === "saved" ? "var(--brass)" : "var(--text-faint)",
+                    }}
+                  >
+                    {favoriteState === "saving" && "Saving…"}
+                    {favoriteState === "saved" && "⟡ Saved"}
+                    {favoriteState === "error" && "Couldn't save — retry"}
+                    {favoriteState === "idle" && "⟡ Save to favorites"}
+                  </button>
+                )}
+              </div>
               <h1 className="font-display mt-1.5 text-4xl font-semibold tracking-tight sm:text-6xl">
                 {current.city}
                 {current.country ? `, ${current.country}` : ""}
               </h1>
               <p className="mt-2.5 font-mono-ui text-[15px]" style={{ color: "var(--text-muted)" }}>
                 {current.latitude.toFixed(2)}°, {current.longitude.toFixed(2)}° · feels{" "}
-                {Math.round(current.feels_like_c)}°
+                {celsiusToDisplay(current.feels_like_c, unit)}°{unit}
               </p>
             </div>
 
@@ -179,7 +220,7 @@ export default function DashboardPage() {
               24hr trace
             </h2>
             <span className="font-mono-ui text-[11px]" style={{ color: "var(--text-faint)" }}>
-              °C
+              °{unit}
             </span>
           </div>
           <div className="h-56">
@@ -204,7 +245,7 @@ export default function DashboardPage() {
                     fontFamily: "var(--font-mono)",
                   }}
                   labelStyle={{ color: "var(--text-muted)" }}
-                  formatter={(value: number) => [`${value}°C`, ""]}
+                  formatter={(value: number) => [`${value}°${unit}`, ""]}
                 />
                 <Line type="monotone" dataKey="temp" stroke="var(--brass)" strokeWidth={2} dot={false} />
               </LineChart>
@@ -243,8 +284,8 @@ export default function DashboardPage() {
                   className="h-9 w-9 opacity-90"
                 />
                 <span className="font-mono-ui text-[17px]">
-                  <span style={{ color: "var(--text-primary)" }}>{Math.round(d.max_temp_c)}°</span>{" "}
-                  <span style={{ color: "var(--text-faint)" }}>{Math.round(d.min_temp_c)}°</span>
+                  <span style={{ color: "var(--text-primary)" }}>{celsiusToDisplay(d.max_temp_c, unit)}°</span>{" "}
+                  <span style={{ color: "var(--text-faint)" }}>{celsiusToDisplay(d.min_temp_c, unit)}°</span>
                 </span>
               </div>
             ))}

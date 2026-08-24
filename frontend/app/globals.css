@@ -379,3 +379,142 @@ header {
     display: none;
   }
 }
+
+
+/* ── Weather-reactive nebula moods — append to the end of your globals.css,
+   after the nebula-fx block. Applies once a search sets the weather mood. ── */
+
+/* clouds — greyer, calmer */
+.nebula-fx[data-weather="clouds"] .nebula-blob-1,
+.nebula-fx[data-weather="clouds"] .nebula-blob-2,
+.nebula-fx[data-weather="clouds"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(159, 176, 204, 0.75), transparent 70%);
+  animation-duration: 65s;
+  opacity: 0.22;
+}
+
+/* rain — cooler teal-blue, a bit faster/more restless */
+.nebula-fx[data-weather="rain"] .nebula-blob-1,
+.nebula-fx[data-weather="rain"] .nebula-blob-2,
+.nebula-fx[data-weather="rain"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(79, 170, 200, 0.8), transparent 70%);
+  animation-duration: 30s;
+}
+
+/* storm — deep violet, restless, with an occasional lightning flash */
+.nebula-fx[data-weather="storm"] .nebula-blob-1,
+.nebula-fx[data-weather="storm"] .nebula-blob-2,
+.nebula-fx[data-weather="storm"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(130, 90, 220, 0.9), transparent 70%);
+  animation-duration: 18s;
+  opacity: 0.32;
+}
+.nebula-fx[data-weather="storm"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(180, 170, 255, 0.5);
+  opacity: 0;
+  animation: lightningFlash 9s ease-in-out infinite;
+}
+@keyframes lightningFlash {
+  0%, 92%, 100% { opacity: 0; }
+  93% { opacity: 0.35; }
+  93.5% { opacity: 0; }
+  94% { opacity: 0.2; }
+  94.5% { opacity: 0; }
+}
+
+/* snow — pale, icy, very calm */
+.nebula-fx[data-weather="snow"] .nebula-blob-1,
+.nebula-fx[data-weather="snow"] .nebula-blob-2,
+.nebula-fx[data-weather="snow"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(210, 225, 245, 0.7), transparent 70%);
+  animation-duration: 80s;
+  opacity: 0.18;
+}
+
+/* mist/fog/haze — desaturated, very low presence */
+.nebula-fx[data-weather="mist"] .nebula-blob-1,
+.nebula-fx[data-weather="mist"] .nebula-blob-2,
+.nebula-fx[data-weather="mist"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(150, 160, 175, 0.5), transparent 70%);
+  animation-duration: 70s;
+  opacity: 0.15;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebula-fx[data-weather="storm"]::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+/* ── Weather-reactive nebula moods — append to the end of your globals.css,
+   after the nebula-fx block. Applies once a search sets the weather mood. ── */
+
+/* clouds — greyer, calmer */
+.nebula-fx[data-weather="clouds"] .nebula-blob-1,
+.nebula-fx[data-weather="clouds"] .nebula-blob-2,
+.nebula-fx[data-weather="clouds"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(159, 176, 204, 0.75), transparent 70%);
+  animation-duration: 65s;
+  opacity: 0.22;
+}
+
+/* rain — cooler teal-blue, a bit faster/more restless */
+.nebula-fx[data-weather="rain"] .nebula-blob-1,
+.nebula-fx[data-weather="rain"] .nebula-blob-2,
+.nebula-fx[data-weather="rain"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(79, 170, 200, 0.8), transparent 70%);
+  animation-duration: 30s;
+}
+
+/* storm — deep violet, restless, with an occasional lightning flash */
+.nebula-fx[data-weather="storm"] .nebula-blob-1,
+.nebula-fx[data-weather="storm"] .nebula-blob-2,
+.nebula-fx[data-weather="storm"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(130, 90, 220, 0.9), transparent 70%);
+  animation-duration: 18s;
+  opacity: 0.32;
+}
+.nebula-fx[data-weather="storm"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(180, 170, 255, 0.5);
+  opacity: 0;
+  animation: lightningFlash 9s ease-in-out infinite;
+}
+@keyframes lightningFlash {
+  0%, 92%, 100% { opacity: 0; }
+  93% { opacity: 0.35; }
+  93.5% { opacity: 0; }
+  94% { opacity: 0.2; }
+  94.5% { opacity: 0; }
+}
+
+/* snow — pale, icy, very calm */
+.nebula-fx[data-weather="snow"] .nebula-blob-1,
+.nebula-fx[data-weather="snow"] .nebula-blob-2,
+.nebula-fx[data-weather="snow"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(210, 225, 245, 0.7), transparent 70%);
+  animation-duration: 80s;
+  opacity: 0.18;
+}
+
+/* mist/fog/haze — desaturated, very low presence */
+.nebula-fx[data-weather="mist"] .nebula-blob-1,
+.nebula-fx[data-weather="mist"] .nebula-blob-2,
+.nebula-fx[data-weather="mist"] .nebula-blob-3 {
+  background: radial-gradient(circle, rgba(150, 160, 175, 0.5), transparent 70%);
+  animation-duration: 70s;
+  opacity: 0.15;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebula-fx[data-weather="storm"]::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}

@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
+import { useUnit } from "@/lib/UnitContext";
 
 export default function NavBar() {
   const { token, logout, isLoading } = useAuth();
+  const { unit, toggleUnit } = useUnit();
   const pathname = usePathname();
 
   return (
@@ -31,6 +33,32 @@ export default function NavBar() {
         </Link>
 
         <nav className="flex items-center gap-5 font-mono-ui text-[13px] uppercase tracking-wider">
+          <button
+            type="button"
+            onClick={toggleUnit}
+            className="flex items-center overflow-hidden rounded-full border text-[11px]"
+            style={{ borderColor: "var(--panel-border)" }}
+            aria-label="Toggle temperature unit"
+          >
+            <span
+              className="px-2.5 py-1 transition-colors"
+              style={{
+                background: unit === "C" ? "var(--brass)" : "transparent",
+                color: unit === "C" ? "var(--bg-deep)" : "var(--text-faint)",
+              }}
+            >
+              °C
+            </span>
+            <span
+              className="px-2.5 py-1 transition-colors"
+              style={{
+                background: unit === "F" ? "var(--brass)" : "transparent",
+                color: unit === "F" ? "var(--bg-deep)" : "var(--text-faint)",
+              }}
+            >
+              °F
+            </span>
+          </button>
           <Link
             href="/dashboard"
             className="nav-link transition-colors hover:text-[var(--brass)]"

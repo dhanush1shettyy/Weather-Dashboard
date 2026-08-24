@@ -1,5 +1,7 @@
 "use client";
 
+import { useUnit, celsiusToDisplay } from "@/lib/UnitContext";
+
 const SIZE = 260;
 const STROKE = 11;
 const RADIUS = (SIZE - STROKE) / 2;
@@ -24,6 +26,7 @@ export default function TempGauge({
   const clamped = Math.min(Math.max(tempC, min), max);
   const pct = (clamped - min) / (max - min);
   const offset = CIRCUMFERENCE * (1 - pct);
+  const { unit } = useUnit();
 
   const ticks = Array.from({ length: 30 }, (_, i) => i);
 
@@ -75,7 +78,7 @@ export default function TempGauge({
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
         <img src={iconUrl} alt={condition} className="h-12 w-12 opacity-90" />
         <span className="font-mono-ui text-[60px] font-medium leading-none tracking-tight">
-          {Math.round(tempC)}°
+          {celsiusToDisplay(tempC, unit)}°{unit}
         </span>
         <span className="font-mono-ui text-[13px] uppercase tracking-[0.2em]" style={{ color: "var(--text-muted)" }}>
           {condition}

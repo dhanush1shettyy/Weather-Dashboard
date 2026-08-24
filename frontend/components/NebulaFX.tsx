@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useWeatherFX } from "@/lib/WeatherFXContext";
 
 /**
  * Site-wide ambient background effect:
  *  - a few large, slowly drifting blue/purple nebula blobs (pure CSS animation)
+ *    whose color/speed react to the current weather mood
  *  - a soft nebula glow that follows the cursor with smooth lag
  *
  * Mounted once in layout.tsx so it persists across route changes.
@@ -12,6 +14,7 @@ import { useEffect, useRef } from "react";
  */
 export default function NebulaFX() {
   const cursorRef = useRef<HTMLDivElement>(null);
+  const { mood } = useWeatherFX();
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -56,7 +59,7 @@ export default function NebulaFX() {
   }, []);
 
   return (
-    <div className="nebula-fx" aria-hidden="true">
+    <div className="nebula-fx" data-weather={mood} aria-hidden="true">
       <div className="nebula-blob nebula-blob-1" />
       <div className="nebula-blob nebula-blob-2" />
       <div className="nebula-blob nebula-blob-3" />
