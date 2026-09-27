@@ -83,9 +83,9 @@ export default function LandingPage() {
 function Feature({ icon, title, body }: { icon: string; title: string; body: string }) {
   return (
     <div
-      className="animate-fade-up flex flex-col gap-3 px-7 py-9 transition-colors hover:bg-[var(--bg-deep)]"
-      style={{ background: "var(--bg-deep)" }}
-    >
+  className="animate-fade-up flex flex-col gap-3 px-7 py-9 backdrop-blur-md transition-colors hover:brightness-110"
+  style={{ background: "color-mix(in srgb, var(--bg-deep) 55%, transparent)" }}
+>
       <span className="font-mono-ui text-2xl" style={{ color: "var(--brass)" }}>
         {icon}
       </span>

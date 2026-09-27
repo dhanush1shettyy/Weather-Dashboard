@@ -5,7 +5,7 @@ import { AuthProvider } from "@/lib/AuthContext";
 import { UnitProvider } from "@/lib/UnitContext";
 import { WeatherFXProvider } from "@/lib/WeatherFXContext";
 import NavBar from "@/components/NavBar";
-import NebulaFX from "@/components/NebulaFX";
+import ThermodynamicGrid from "@/components/ui/interactive-thermodynamic-grid";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -36,12 +36,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-<html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
+        <body className="relative min-h-screen antialiased" suppressHydrationWarning></body>
         <AuthProvider>
           <UnitProvider>
             <WeatherFXProvider>
-              <NebulaFX />
+              <ThermodynamicGrid resolution={16} coolingFactor={0.97} />
               <NavBar />
               <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">{children}</main>
             </WeatherFXProvider>
