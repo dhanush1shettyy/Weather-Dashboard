@@ -16,10 +16,19 @@ import { useUnit, celsiusToDisplay } from "@/lib/UnitContext";
 import { useWeatherFX } from "@/lib/WeatherFXContext";
 import TempGauge from "@/components/TempGauge";
 
+const HERO_COLORS: Record<string, string> = {
+  clear: "#fbbf24",
+  clouds: "#cbd5e1",
+  rain: "#60a5fa",
+  storm: "#a78bfa",
+  snow: "#e0f2fe",
+  mist: "#94a3b8",
+};
+
 export default function DashboardPage() {
   const { token } = useAuth();
   const { unit } = useUnit();
-  const { setMoodFromCondition } = useWeatherFX();
+  const { mood, setMoodFromCondition } = useWeatherFX();
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +47,8 @@ export default function DashboardPage() {
 
       const fc = await api.getForecast(weather.latitude, weather.longitude);
       setForecast(fc);
+
+     
 
       if (token) {
         api
@@ -171,14 +182,30 @@ export default function DashboardPage() {
                   </button>
                 )}
               </div>
-              <h1 className="font-display mt-1.5 text-4xl font-semibold tracking-tight sm:text-6xl">
-                {current.city}
-                {current.country ? `, ${current.country}` : ""}
-              </h1>
-              <p className="mt-2.5 font-mono-ui text-[15px]" style={{ color: "var(--text-muted)" }}>
-                {current.latitude.toFixed(2)}°, {current.longitude.toFixed(2)}° · feels{" "}
-                {celsiusToDisplay(current.feels_like_c, unit)}°{unit}
-              </p>
+              <h1 className="font-display mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl" style={{ color: "var(--text-muted)" }}>
+  {current.city}
+  {current.country ? `, ${current.country}` : ""}
+</h1>
+
+<div className="mt-3 flex items-end justify-center gap-3 sm:justify-start">
+  <span
+    className="font-display text-8xl font-bold leading-none tracking-tighter sm:text-[8rem]"
+    style={{ color: HERO_COLORS[mood] ?? "var(--brass)" }}
+  >
+    {celsiusToDisplay(current.temperature_c, unit)}°
+  </span>
+  <span
+    className="mb-3 font-mono-ui text-sm uppercase tracking-widest"
+    style={{ color: "var(--text-faint)" }}
+  >
+    {current.condition}
+  </span>
+</div>
+
+<p className="mt-3 font-mono-ui text-[15px]" style={{ color: "var(--text-muted)" }}>
+  {current.latitude.toFixed(2)}°, {current.longitude.toFixed(2)}° · feels{" "}
+  {celsiusToDisplay(current.feels_like_c, unit)}°{unit}
+</p>
             </div>
 
             <TempGauge

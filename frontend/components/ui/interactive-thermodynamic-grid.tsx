@@ -1,19 +1,22 @@
 "use client";
+
 import React, { useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useWeatherFX, WeatherMood } from "@/lib/WeatherFXContext";
 
 interface ThermodynamicGridProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * Grid density. Lower = chunky, Higher = smooth.
-   * Default: 25
-   */
   resolution?: number;
-  /**
-   * Cooling rate (0 to 1). Higher = trails fade faster.
-   * Default: 0.98
-   */
   coolingFactor?: number;
 }
+
+const MOOD_TINTS: Record<WeatherMood, { r: number; g: number; b: number }> = {
+  clear:  { r: 1.0,  g: 0.85, b: 0.55 }, // warm amber (original look)
+  clouds: { r: 0.75, g: 0.78, b: 0.85 }, // cool grey
+  rain:   { r: 0.4,  g: 0.6,  b: 1.0 },  // blue
+  storm:  { r: 0.65, g: 0.35, b: 1.0 },  // violet
+  snow:   { r: 0.8,  g: 0.9,  b: 1.0 },  // icy pale blue/white
+  mist:   { r: 0.7,  g: 0.72, b: 0.75 }, // desaturated grey
+};
 
 const ThermodynamicGrid = ({
   className,
@@ -24,6 +27,12 @@ const ThermodynamicGrid = ({
 }: ThermodynamicGridProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { mood } = useWeatherFX();
+  const moodRef = useRef<WeatherMood>(mood);
+
+  useEffect(() => {
+    moodRef.current = mood;
+  }, [mood]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -42,9 +51,10 @@ const ThermodynamicGrid = ({
     const mouse = { x: -1000, y: -1000, prevX: -1000, prevY: -1000, active: false };
 
     const getThermalColor = (t: number) => {
-      const r = Math.min(255, Math.max(0, t * 2.5 * 255));
-      const g = Math.min(255, Math.max(0, (t * 2.5 - 1) * 255));
-      const b = Math.min(255, Math.max(0, (t * 2.5 - 2) * 255 + (t * 50)));
+      const tint = MOOD_TINTS[moodRef.current] ?? MOOD_TINTS.clear;
+      const r = Math.min(255, Math.max(0, t * 2.5 * 255 * tint.r));
+      const g = Math.min(255, Math.max(0, (t * 2.5 - 1) * 255 * tint.g));
+      const b = Math.min(255, Math.max(0, (t * 2.5 - 2) * 255 * tint.b + t * 50));
       return `rgb(${r + 10}, ${g + 10}, ${b + 15})`;
     };
 
@@ -80,10 +90,8 @@ const ThermodynamicGrid = ({
           const t = steps > 0 ? s / steps : 0;
           const x = mouse.prevX + dx * t;
           const y = mouse.prevY + dy * t;
-
           const col = Math.floor(x / resolution);
           const row = Math.floor(y / resolution);
-
           const radius = 2;
           for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
@@ -111,7 +119,6 @@ const ThermodynamicGrid = ({
         for (let c = 0; c < cols; c++) {
           const idx = c + r * cols;
           let temp = grid[idx];
-
           grid[idx] *= coolingFactor;
 
           if (temp > 0.05) {
@@ -120,7 +127,6 @@ const ThermodynamicGrid = ({
             ctx.fillStyle = getThermalColor(temp);
             const size = resolution * (0.8 + temp * 0.5);
             const offset = (resolution - size) / 2;
-
             ctx.beginPath();
             ctx.rect(x + offset, y + offset, size, size);
             ctx.fill();
