@@ -39,6 +39,8 @@ export default function NavBar() {
             className="flex items-center overflow-hidden rounded-full border text-[11px]"
             style={{ borderColor: "var(--panel-border)" }}
             aria-label="Toggle temperature unit"
+            suppressHydrationWarning
+
           >
             <span
               className="px-2.5 py-1 transition-colors"
